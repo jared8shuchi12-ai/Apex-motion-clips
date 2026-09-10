@@ -13,11 +13,16 @@ app = FastAPI(title="Apex Motion Split-Screen Engine")
 def resolve_media_source(source_url_or_path: str, output_path: str) -> str:
     if source_url_or_path.startswith("http://") or source_url_or_path.startswith("https://"):
         ydl_opts = {
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+            'format': 'best',
             'outtmpl': output_path,
             'quiet': True,
             'no_warnings': True,
             'overwrites': True,
+            'extractor_args': {
+                'youtube': {
+                    'player_client': ['android', 'ios', 'mweb']
+                }
+            }
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([source_url_or_path])
